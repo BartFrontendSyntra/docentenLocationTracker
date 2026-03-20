@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
+            $table->string('street');
+            $table->string('house_number');
+            $table->foreignId('city_id')->constrained()->onDelete('cascade');
+            $table->text('location_data')->nullable(); // Good for JSON or long strings
             $table->timestamps();
         });
     }
