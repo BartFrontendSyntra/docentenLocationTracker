@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('street');
             $table->string('house_number');
             $table->foreignId('city_id')->constrained()->onDelete('cascade');
-            $table->text('location_data')->nullable(); // Good for JSON or long strings
+            $table->geography('location_data', subtype: 'point', srid: 4326)->nullable();
             $table->timestamps();
         });
     }
