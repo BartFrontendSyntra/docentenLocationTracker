@@ -14,6 +14,14 @@ class AddressResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+        'id' => $this->id,
+        'street' => $this->street,
+        'house_number' => $this->house_number,
+        'location_data' => $this->location_data,
+
+        // Conditionally load the CityResource
+        'city' => new CityResource($this->whenLoaded('city')),
+        ];
     }
 }

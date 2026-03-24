@@ -14,6 +14,12 @@ class CourseResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+        'id' => $this->id,
+        'name' => $this->name,
+        // collection because of many-to-many relationship
+        'course_types' => CourseTypeResource::collection($this->whenLoaded('types')),
+        'teachers' => TeacherResource::collection($this->whenLoaded('teachers')),
+    ];
     }
 }
