@@ -21,7 +21,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'username' => ['required', 'string', 'max:255', Rule::unique('users', 'username')],
+            'name' => ['required', 'string', 'max:255', Rule::unique('users', 'name')],
             'email'    => ['required', 'email', 'max:255', Rule::unique('users', 'email')],
             'password' => ['required', 'string', 'min:8'], // here we can enforce more rules on passwords if we want
             'role_id'  => ['required', Rule::exists('roles', 'id')],
@@ -46,7 +46,7 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $validated = $request->validate([
-            'username' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('users', 'username')->ignore($user->id)],
+            'name' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('users', 'name')->ignore($user->id)],
             'email'    => ['sometimes', 'required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
             'password' => ['nullable', 'string', 'min:8'],
             'role_id'  => ['sometimes', 'required', Rule::exists('roles', 'id')],
