@@ -17,6 +17,7 @@ class CourseTypeResource extends JsonResource
         return [
         'id' => $this->id,
         'name' => $this->name,
+        'courses' => CourseResource::collection($this->whenLoaded('courses')),
         ];
     }
 }
