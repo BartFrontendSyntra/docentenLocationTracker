@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\City;
 use App\Http\Resources\CityResource;
+use Illuminate\Validation\Rule;
 
 class CityController extends Controller
 {
