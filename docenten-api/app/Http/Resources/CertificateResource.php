@@ -17,6 +17,7 @@ class CertificateResource extends JsonResource
         return [
         'id' => $this->id,
         'name' => $this->name,
+        'teachers' => TeacherResource::collection($this->whenLoaded('teachers')),
         ];
     }
 }
