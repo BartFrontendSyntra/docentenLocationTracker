@@ -4,6 +4,8 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\CityResource;
+use App\Http\Resources\TeacherResource;
 
 class AddressResource extends JsonResource
 {
@@ -20,8 +22,8 @@ class AddressResource extends JsonResource
         'house_number' => $this->house_number,
         'location_data' => $this->location_data,
 
-        // Conditionally load the CityResource
         'city' => new CityResource($this->whenLoaded('city')),
+        'teachers' => new TeacherResource($this->whenLoaded('teachers')),
         ];
     }
 }
