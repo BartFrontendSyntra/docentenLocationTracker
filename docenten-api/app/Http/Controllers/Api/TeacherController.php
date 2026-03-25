@@ -1,0 +1,109 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\Teacher;
+use App\Http\Resources\TeacherResource;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+
+class TeacherController extends Controller
+{
+
+    public function index()
+    {
+        $teachers = Teacher::with(['address.city', 'courses', 'certificates'])->paginate(25);
+
+        return TeacherResource::collection($teachers);
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name'  => ['required', 'string', 'max:255'],
+            'email'      => [
+                'required',
+                'email',
+                Rule::unique('teachers', 'email')
+            ],
+            'company_number' => ['nullable', 'string', 'max:255'],
+            'telephone'      => ['nullable', 'string', 'max:50'],
+            'cellphone'      => ['nullable', 'string', 'max:50'],
+            'address_id'     => ['required', Rule::exists('addresses', 'id')],
+
+            // Validating arrays for Many-to-Many relationships
+            'course_ids'   => ['nullable', 'array'],
+            'course_ids.*' => [Rule::exists('courses', 'id')],
+
+            'certificate_ids'   => ['nullable', 'array'],
+            'certificate_ids.*' => [Rule::exists('certificates', 'id')],
+        ]);
+
+        $teacher = Teacher::create($validated);
+
+        if ($request->has('course_ids')) {
+            $teacher->courses()->attach($request->course_ids);
+        }
+        if ($request->has('certificate_ids')) {
+            $teacher->certificates()->attach($request->certificate_ids);
+        }
+
+        $teacher->load(['address.city', 'courses', 'certificates']);
+
+        return new TeacherResource($teacher);
+    }
+
+    public function show(Teacher $teacher)
+    {
+        $teacher->load(['address.city', 'courses', 'certificates']);
+
+        return new TeacherResource($teacher);
+    }
+
+
+    public function update(Request $request, Teacher $teacher)
+    {
+        $validated = $request->validate([
+            'first_name' => ['sometimes', 'required', 'string', 'max:255'],
+            'last_name'  => ['sometimes', 'required', 'string', 'max:255'],
+            'email'      => [
+                'sometimes',
+                'required',
+                'email',
+                Rule::unique('teachers', 'email')->ignore($teacher->id),
+            ],
+            'company_number' => ['nullable', 'string', 'max:255'],
+            'telephone'      => ['nullable', 'string', 'max:50'],
+            'cellphone'      => ['nullable', 'string', 'max:50'],
+            'address_id'     => ['sometimes', 'required', Rule::exists('addresses', 'id')],
+
+            'course_ids'   => ['nullable', 'array'],
+            'course_ids.*' => [Rule::exists('courses', 'id')],
+
+            'certificate_ids'   => ['nullable', 'array'],
+            'certificate_ids.*' => [Rule::exists('certificates', 'id')],
+        ]);
+
+        $teacher->update($validated);
+
+        if ($request->has('course_ids')) {
+            $teacher->courses()->sync($request->course_ids);
+        }
+        if ($request->has('certificate_ids')) {
+            $teacher->certificates()->sync($request->certificate_ids);
+        }
+
+        $teacher->load(['address.city', 'courses', 'certificates']);
+
+        return new TeacherResource($teacher);
+    }
+
+    public function destroy(Teacher $teacher)
+    {
+        $teacher->delete();
+
+        return response()->noContent();
+    }
+}
