@@ -8,12 +8,14 @@ use App\Http\Resources\AddressResource;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class AddressController extends Controller
 {
 
     public function index()
     {
+        Gate::authorize('viewAny', Address::class);
 
         $addresses = Address::with('city')->paginate(20);
 
@@ -22,6 +24,8 @@ class AddressController extends Controller
 
     public function store(Request $request)
     {
+        Gate::authorize('create', Address::class);
+
         $validated = $request->validate([
             'street'       => ['required', 'string', 'max:255'],
             'house_number' => ['required', 'string', 'max:50'],
@@ -52,6 +56,8 @@ class AddressController extends Controller
 
     public function show(Address $address)
     {
+        Gate::authorize('view', $address);
+
         $address->load(['city', 'teacher']);
 
         return new AddressResource($address);
@@ -59,6 +65,7 @@ class AddressController extends Controller
 
     public function update(Request $request, Address $address)
     {
+        Gate::authorize('update', $address);
         $validated = $request->validate([
             'street'       => ['sometimes', 'required', 'string', 'max:255'],
             'house_number' => ['sometimes', 'required', 'string', 'max:50'],
@@ -99,6 +106,8 @@ class AddressController extends Controller
 
     public function destroy(Address $address)
     {
+        Gate::authorize('delete', $address);
+
         $address->delete();
 
         return response()->noContent();
