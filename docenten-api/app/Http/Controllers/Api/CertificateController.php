@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CertificateController extends Controller
 {
 
     public function index()
     {
-        return CertificateResource::collection(Certificate::all());
+        return CertificateResource::collection(Certificate::all())->paginate(50);
     }
 
     public function store(Request $request)
