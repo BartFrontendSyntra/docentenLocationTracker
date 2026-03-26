@@ -7,17 +7,20 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\Certificate;
 use App\Http\Resources\CertificateResource;
+use Illuminate\Support\Facades\Gate;
 
 class CertificateController extends Controller
 {
 
     public function index()
     {
+        Gate::authorize('viewAny', Certificate::class);
         return CertificateResource::collection(Certificate::paginate(50));
     }
 
     public function store(Request $request)
     {
+        Gate::authorize('create', Certificate::class);
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:certificates,name',
         ]);
@@ -29,6 +32,7 @@ class CertificateController extends Controller
 
     public function show(Certificate $certificate)
     {
+        Gate::authorize('view', $certificate);
         $certificate->load('teachers');
 
         return new CertificateResource($certificate);
@@ -36,6 +40,7 @@ class CertificateController extends Controller
 
     public function update(Request $request, Certificate $certificate)
     {
+        Gate::authorize('update', $certificate);
            $validated = $request->validate([
             'name' => ['sometimes',
             'required',
@@ -45,7 +50,6 @@ class CertificateController extends Controller
             ]
         ]);
 
-
         $certificate->update($validated);
 
         return new CertificateResource($certificate);
@@ -53,6 +57,8 @@ class CertificateController extends Controller
 
     public function destroy(Certificate $certificate)
     {
+        Gate::authorize('delete', $certificate);
+
         $certificate->delete();
 
         return response()->noContent();

@@ -7,12 +7,16 @@ use App\Models\Teacher;
 use App\Http\Resources\TeacherResource;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Gate;
 
 class TeacherController extends Controller
 {
 
     public function index()
     {
+
+        Gate::authorize('viewAny', Teacher::class);
+
         $teachers = Teacher::with(['address.city', 'courses', 'certificates'])->paginate(25);
 
         return TeacherResource::collection($teachers);
@@ -20,6 +24,8 @@ class TeacherController extends Controller
 
     public function store(Request $request)
     {
+        Gate::authorize('create', Teacher::class);
+
         $validated = $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name'  => ['required', 'string', 'max:255'],
@@ -57,6 +63,8 @@ class TeacherController extends Controller
 
     public function show(Teacher $teacher)
     {
+        Gate::authorize('view', $teacher);
+
         $teacher->load(['address.city', 'courses', 'certificates']);
 
         return new TeacherResource($teacher);
@@ -65,6 +73,8 @@ class TeacherController extends Controller
 
     public function update(Request $request, Teacher $teacher)
     {
+        Gate::authorize('update', $teacher);
+
         $validated = $request->validate([
             'first_name' => ['sometimes', 'required', 'string', 'max:255'],
             'last_name'  => ['sometimes', 'required', 'string', 'max:255'],
@@ -102,6 +112,8 @@ class TeacherController extends Controller
 
     public function destroy(Teacher $teacher)
     {
+        Gate::authorize('delete', $teacher);
+
         $teacher->delete();
 
         return response()->noContent();

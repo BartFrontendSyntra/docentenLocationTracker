@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\City;
 use App\Http\Resources\CityResource;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Gate;
 
 class CityController extends Controller
 {
@@ -15,6 +16,7 @@ class CityController extends Controller
      */
     public function index()
     {
+        Gate::authorize('viewAny', City::class);
 
         return CityResource::collection(City::all());
 
@@ -25,6 +27,8 @@ class CityController extends Controller
      */
     public function store(Request $request)
     {
+        Gate::authorize('create', City::class);
+
         $validated = $request->validate([
             'postal_code' => 'required|string|size:4|unique:cities,postal_code',
             'name' => 'required|string|max:255',
@@ -37,6 +41,7 @@ class CityController extends Controller
      * Display the specified city.
      */
     public function show(City $city) {
+        Gate::authorize('view', $city);
         // Optional: Load addresses if you want to see all addresses in this city
         // $city->load('addresses');
         return new CityResource($city);
@@ -46,6 +51,7 @@ class CityController extends Controller
      * Update the specified city in storage.
      */
     public function update(Request $request, City $city) {
+        Gate::authorize('update', $city);
         $validated = $request->validate([
             'postal_code' => [
             'sometimes',
@@ -64,6 +70,7 @@ class CityController extends Controller
      * Remove the specified city from storage.
      */
     public function destroy(City $city) {
+        Gate::authorize('delete', $city);
         $city->delete();
         return response()->noContent();
     }
