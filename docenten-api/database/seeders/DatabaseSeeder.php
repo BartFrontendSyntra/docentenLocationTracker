@@ -17,8 +17,8 @@ class DatabaseSeeder extends Seeder
         $now = Carbon::now();
 
         // 1. Roles
-        $adminRoleId = DB::table("roles")->insertGetId(["name" => "admin", "created_at" => $now, "updated_at" => $now]);
-        $viewerRoleId = DB::table("roles")->insertGetId(["name" => "viewer", "created_at" => $now, "updated_at" => $now]);
+        $adminRoleId = DB::table("roles")->insertGetId(["name" => "Administrator", "created_at" => $now, "updated_at" => $now]);
+        $viewerRoleId = DB::table("roles")->insertGetId(["name" => "Viewer", "created_at" => $now, "updated_at" => $now]);
 
         // 2. Users
         DB::table("users")->insert([
@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
             "created_at" => $now,
             "updated_at" => $now,
         ]);
-        
+
         DB::table("users")->insert([
             "name" => "Test Viewer",
             "email" => "viewer@example.com",
@@ -104,7 +104,7 @@ class DatabaseSeeder extends Seeder
         $courseId1 = DB::table("courses")->insertGetId(["name" => "Laravel Beginners", "created_at" => $now, "updated_at" => $now]);
         $courseId2 = DB::table("courses")->insertGetId(["name" => "Advanced Vue.js", "created_at" => $now, "updated_at" => $now]);
         $courseId3 = DB::table("courses")->insertGetId(["name" => "Angular Mastery", "created_at" => $now, "updated_at" => $now]);
-        
+
         // Pivot tables: course_teacher and course_course_type
         DB::table("course_teacher")->insert([
             ["course_id" => $courseId1, "teacher_id" => $teacherId1],
