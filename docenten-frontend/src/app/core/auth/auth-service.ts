@@ -11,9 +11,12 @@ import { firstValueFrom } from 'rxjs';
 
 export class AuthService {
   private http = inject(HttpClient);
+  private userSignal = signal<User | null>(null);
 
-  currentUser = signal<User | null>(null);
   private apiUrl = 'http://127.0.0.1:8000/api';
+
+
+
 
   async login(credentials: { login: string; password: string }): Promise<LoginResponse> {
 
@@ -22,22 +25,47 @@ export class AuthService {
     );
 
     localStorage.setItem('access_token', response.access_token);
-    this.currentUser.set(response.user);
+    this.userSignal.set(response.user);
 
     return response;
   }
 
   logout() {
     localStorage.removeItem('access_token');
-    this.currentUser.set(null);
+    this.userSignal.set(null);
+  }
+
+  getCurrentUser() {
+    return this.userSignal.asReadonly();
+  }
+
+  async fetchProfile(): Promise<User | null> {
+    const token = localStorage.getItem('access_token');
+
+    if (!token) {
+      return null;
+    }
+    try {
+      const user = await firstValueFrom(this .http.get<User>(`${this.apiUrl}/user`));
+      this.userSignal.set(user);
+      return user;
+
+    }
+    catch (err) {
+      //console.error('Error fetching profile:', err);
+      this.logout();
+      return null;
+    }
   }
 }
+
+export type RoleName = 'Administrator' | 'Viewer';
 
 export interface User {
   id: number;
   username: string;
   email: string;
-  role_id: number;
+  role: RoleName;
 }
 
 export interface LoginResponse {
