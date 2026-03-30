@@ -1,0 +1,27 @@
+<div class="login-container">
+  <h2>Welcome Back</h2>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="login">Username or Email</label>
+      <input id="login" type="text" formControlName="login" />
+    </div>
+
+    <div>
+      <label for="password">Password</label>
+      <input id="password" type="password" formControlName="password" />
+    </div>
+
+    @if (errorMessage()) {
+      <p class="error">{{ errorMessage() }}</p>
+    }
+
+    <button type="submit" [disabled]="loginForm.invalid || isLoading()">
+      @if (isLoading()) {
+        Logging in...
+      } @else {
+        Login
+      }
+    </button>
+  </form>
+</div>
