@@ -30,27 +30,24 @@ export class Login {
     this.errorMessage.set(null);
 
     try {
-      // 1. Await the login method from our service
+
       const response = await this.authService.login(this.loginForm.getRawValue());
 
-      // 2. If successful, route based on role_id
-      if (response.user.role_id === 1) {
+      if (response.user.role === 'Administrator') {
         this.router.navigate(['/admin-dashboard']);
       } else {
         this.router.navigate(['/viewer-dashboard']);
       }
 
     } catch (err: any) {
-      // 3. If an error is thrown, handle it here
+
       if (err.status === 422) {
         this.errorMessage.set('Invalid credentials. Please try again.');
       } else {
-        // TODO. change message to more specific one based on error type
         this.errorMessage.set('An error occurred. Is your backend running?');
       }
 
     } finally {
-      // 4. This block runs regardless of success or failure
       this.isLoading.set(false);
     }
   }
