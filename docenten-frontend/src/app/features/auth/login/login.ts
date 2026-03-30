@@ -45,6 +45,7 @@ export class Login {
       if (err.status === 422) {
         this.errorMessage.set('Invalid credentials. Please try again.');
       } else {
+        // TODO. change message to more specific one based on error type
         this.errorMessage.set('An error occurred. Is your backend running?');
       }
 
