@@ -6,13 +6,13 @@ export const viewerGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
   const user = authService.getCurrentUser();
+  const currentUser = user();
 
-  if (!user) {
+  if (!currentUser) {
     return router.parseUrl('/login');
   }
 
-
-  if (user()!.role === 'Viewer') {
+  if (currentUser.role === 'Viewer') {
     return true;
   }
 
