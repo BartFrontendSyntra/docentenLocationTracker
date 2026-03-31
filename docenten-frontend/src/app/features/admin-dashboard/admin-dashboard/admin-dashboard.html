@@ -1,0 +1,71 @@
+<mat-sidenav-container class="dashboard-wrapper">
+  <mat-sidenav mode="side" opened class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-circle">
+        <mat-icon color="primary">school</mat-icon>
+      </div>
+      <h2>Docentenradar</h2>
+    </div>
+
+    <mat-nav-list class="nav-links">
+      <a mat-list-item [activated]="true">
+        <mat-icon matListItemIcon>dashboard</mat-icon>
+        <div matListItemTitle>Dashboard</div>
+      </a>
+      <a mat-list-item>
+        <mat-icon matListItemIcon>library_books</mat-icon>
+        <div matListItemTitle>Map</div>
+      </a>
+      <a mat-list-item>
+        <mat-icon matListItemIcon>event</mat-icon>
+        <div matListItemTitle>Schedule</div>
+      </a>
+    </mat-nav-list>
+
+    <div class="spacer"></div>
+
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <mat-icon>person</mat-icon>
+        <div class="user-text">
+          <span class="username">{{ currentUser()?.name }}</span>
+          <span class="role-badge">{{ currentUser()?.role }}</span>
+        </div>
+      </div>
+
+      <button mat-stroked-button color="warn" class="logout-btn" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Logout
+      </button>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="main-content">
+    <div class="dashboard-container">
+      <header class="dashboard-header">
+        <h2>Viewer Dashboard</h2>
+        <p>
+          Logged in as: <strong>{{ currentUser()?.role }}</strong>
+        </p>
+        <p>You have read-only access to view the teachers.</p>
+      </header>
+
+      <div class="card-grid">
+        @for (teacher of teachers(); track teacher.id) {
+          <mat-card class="course-card">
+            <mat-card-header>
+              <mat-card-title>{{ teacher.first_name }} {{ teacher.last_name }}</mat-card-title>
+              <mat-card-subtitle>{{ teacher.email }}</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-actions>
+              <button mat-button color="primary">View Details</button>
+            </mat-card-actions>
+          </mat-card>
+        } @empty {
+          <p>No teachers available right now.</p>
+        }
+      </div>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
