@@ -8,11 +8,11 @@ export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: Login },
 
-  {
+/*   {
     path: 'admin-dashboard',
     // load the admin component
     canActivate: [adminGuard],
-  },
+  }, */
   {
     path: 'viewer-dashboard',
     component: ViewerDashboard,
