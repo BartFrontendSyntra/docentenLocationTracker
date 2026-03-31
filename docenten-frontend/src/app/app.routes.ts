@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { Login } from './features/auth/login/login';
 import { adminGuard } from '@core/guards/admin-guard';
 import { viewerGuard } from '@core/guards/viewer-guard';
+import { ViewerDashboard } from './features/viewer-dashboard/viewer-dashboard/viewer-dashboard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -14,8 +15,8 @@ export const routes: Routes = [
   },
   {
     path: 'viewer-dashboard',
-    // load the viewer component
-     canActivate: [viewerGuard],
+    component: ViewerDashboard,
+    canActivate: [viewerGuard],
 
   }
 
