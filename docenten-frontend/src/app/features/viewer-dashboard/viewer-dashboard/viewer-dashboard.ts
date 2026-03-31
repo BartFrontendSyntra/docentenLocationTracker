@@ -20,7 +20,7 @@ export class ViewerDashboard {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  currentUser = this.authService.getCurrentUser();
+  currentUser = this.authService.currentUser;
 
   teachers = signal([
     {
