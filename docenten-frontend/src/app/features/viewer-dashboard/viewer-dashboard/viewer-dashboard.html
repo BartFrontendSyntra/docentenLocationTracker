@@ -8,17 +8,19 @@
     </div>
 
     <mat-nav-list class="nav-links">
-      <a mat-list-item [activated]="true">
+      <a mat-list-item routerLink="./statistics" routerLinkActive #rla1="routerLinkActive" [activated]="rla1.isActive">
         <mat-icon matListItemIcon>dashboard</mat-icon>
-        <div matListItemTitle>Dashboard</div>
+        <div matListItemTitle>overzicht</div>
       </a>
-      <a mat-list-item>
-        <mat-icon matListItemIcon>library_books</mat-icon>
+
+      <a mat-list-item routerLink="./map" routerLinkActive #rla2="routerLinkActive" [activated]="rla2.isActive">
+        <mat-icon matListItemIcon>map</mat-icon>
         <div matListItemTitle>Map</div>
       </a>
-      <a mat-list-item>
-        <mat-icon matListItemIcon>event</mat-icon>
-        <div matListItemTitle>Schedule</div>
+
+      <a mat-list-item routerLink="./teachers" routerLinkActive #rla3="routerLinkActive" [activated]="rla3.isActive">
+        <mat-icon matListItemIcon>list</mat-icon>
+        <div matListItemTitle>alle docenten</div>
       </a>
     </mat-nav-list>
 
@@ -42,30 +44,7 @@
 
   <mat-sidenav-content class="main-content">
     <div class="dashboard-container">
-      <header class="dashboard-header">
-        <h2>Viewer Dashboard</h2>
-        <p>
-          Logged in as: <strong>{{ currentUser()?.role }}</strong>
-        </p>
-        <p>You have read-only access to view the teachers.</p>
-      </header>
-
-      <div class="card-grid">
-        @for (teacher of teachers(); track teacher.id) {
-          <mat-card class="course-card">
-            <mat-card-header>
-              <mat-card-title>{{ teacher.first_name }} {{ teacher.last_name }}</mat-card-title>
-              <mat-card-subtitle>{{ teacher.email }}</mat-card-subtitle>
-            </mat-card-header>
-
-            <mat-card-actions>
-              <button mat-button color="primary">View Details</button>
-            </mat-card-actions>
-          </mat-card>
-        } @empty {
-          <p>No teachers available right now.</p>
-        }
-      </div>
+      <router-outlet></router-outlet>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

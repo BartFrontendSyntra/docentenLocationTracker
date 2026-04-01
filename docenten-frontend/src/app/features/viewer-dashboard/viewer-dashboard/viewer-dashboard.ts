@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '@core/auth/auth-service';
+
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,7 +13,7 @@ import { MatListModule } from '@angular/material/list';
 @Component({
   selector: 'app-viewer-dashboard',
   standalone: true,
-  imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatCardModule, MatSidenavModule, MatListModule],
+  imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatCardModule, MatSidenavModule, MatListModule, RouterModule],
   templateUrl: './viewer-dashboard.html',
   styleUrl: './viewer-dashboard.css',
 })
