@@ -2,13 +2,16 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '@core/auth/auth-service';
 
-export const viewerGuard: CanActivateFn = () => {
+export const viewerGuard: CanActivateFn = async(route,state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
-  const user = authService.getCurrentUser();
-  const currentUser = user();
+  let currentUser = authService.currentUser();
 
-  if (!currentUser) {
+  if (!currentUser && localStorage.getItem('access_token')) {
+    currentUser = await authService.fetchProfile();
+  }
+  
+  if(!currentUser) {
     return router.parseUrl('/login');
   }
 

@@ -13,9 +13,9 @@ export class AuthService {
   private http = inject(HttpClient);
   private userSignal = signal<User | null>(null);
 
+  currentUser = this.userSignal.asReadonly();
+
   private apiUrl = 'http://127.0.0.1:8000/api';
-
-
 
 
   async login(credentials: { login: string; password: string }): Promise<LoginResponse> {
@@ -26,17 +26,12 @@ export class AuthService {
 
     localStorage.setItem('access_token', response.access_token);
     this.userSignal.set(response.user);
-
     return response;
   }
 
   logout() {
     localStorage.removeItem('access_token');
     this.userSignal.set(null);
-  }
-
-  getCurrentUser() {
-    return this.userSignal.asReadonly();
   }
 
   async fetchProfile(): Promise<User | null> {
@@ -52,7 +47,7 @@ export class AuthService {
 
     }
     catch (err) {
-      //console.error('Error fetching profile:', err);
+      console.error('Error fetching profile:', err);
       this.logout();
       return null;
     }
@@ -63,7 +58,7 @@ export type RoleName = 'Administrator' | 'Viewer';
 
 export interface User {
   id: number;
-  username: string;
+  name: string;
   email: string;
   role: RoleName;
 }

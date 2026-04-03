@@ -1,27 +1,60 @@
-<div class="login-container">
-  <h2>Welcome Back</h2>
+<div class="login-wrapper">
+  <mat-card class="login-card" elevation="4">
 
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <div>
-      <label for="login">Username or Email</label>
-      <input id="login" type="text" formControlName="login" />
-    </div>
+    <mat-card-header>
+      <div mat-card-avatar class="header-icon">
+        <mat-icon color="primary">lock</mat-icon>
+      </div>
+      <mat-card-title>Docenten map app</mat-card-title>
+      <mat-card-subtitle>Gelieve in te loggen om verder te gaan</mat-card-subtitle>
+    </mat-card-header>
 
-    <div>
-      <label for="password">Password</label>
-      <input id="password" type="password" formControlName="password" />
-    </div>
+    <mat-card-content>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
 
-    @if (errorMessage()) {
-      <p class="error">{{ errorMessage() }}</p>
-    }
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Username or Email</mat-label>
+          <input matInput formControlName="login" placeholder="Ex. admin@school.com" />
+          <mat-icon matPrefix>person</mat-icon>
+          @if (loginForm.get('login')?.hasError('required') && loginForm.get('login')?.touched) {
+            <mat-error>Username is required</mat-error>
+          }
+        </mat-form-field>
 
-    <button type="submit" [disabled]="loginForm.invalid || isLoading()">
-      @if (isLoading()) {
-        Logging in...
-      } @else {
-        Login
-      }
-    </button>
-  </form>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" formControlName="password" />
+          <mat-icon matPrefix>vpn_key</mat-icon>
+          @if (loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
+            <mat-error>Password is required</mat-error>
+          }
+        </mat-form-field>
+
+        @if (errorMessage()) {
+          <div class="api-error">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ errorMessage() }}</span>
+          </div>
+        }
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="submit-button"
+          [disabled]="loginForm.invalid || isLoading()">
+
+          @if (isLoading()) {
+            <mat-spinner diameter="20"></mat-spinner>
+            <span class="btn-text-loading">Authenticating...</span>
+          } @else {
+            Login
+          }
+
+        </button>
+
+      </form>
+    </mat-card-content>
+
+  </mat-card>
 </div>
