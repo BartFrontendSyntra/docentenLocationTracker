@@ -22,6 +22,10 @@ export interface Address {
   id: number;
   street: string;
   house_number: string;
+  location_data: {
+    lat: number;
+    lng: number;
+  };
   city: City;
 }
 export interface City{

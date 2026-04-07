@@ -101,3 +101,39 @@
   margin-bottom: 1rem;
   opacity: 0.5;
 }
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  align-items: center;
+}
+
+.filter-bar mat-form-field {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Specific styling for the slider container */
+.distance-filter {
+  flex: 1;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  padding-top: 8px; /* Aligns visually with the outlined inputs */
+}
+
+.distance-filter label {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+/* Remove bottom margin from form fields to keep the bar compact */
+::ng-deep .filter-bar .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}

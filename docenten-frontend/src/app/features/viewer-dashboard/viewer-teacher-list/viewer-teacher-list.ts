@@ -33,21 +33,62 @@ private teacherService = inject(TeacherService);
   searchQuery = signal<string>('');
   isLoading = signal<boolean>(true);
 
-  
+  selectedCert = signal<string>('All');
+  selectedCourse = signal<string>('All');
+  maxDistance = signal<number>(25);
+
+  // default location, needs to be changed to users preferred location or current location
+  myLocation = signal<{lat: number, lng: number} | null>({ lat: 50.9383, lng: 5.3486 });
+
+  availableCerts = computed(() => {
+    const allCerts = this.teachers().flatMap(t => t.certificates?.map(c => c.name) || []);
+    return ['All', ...new Set(allCerts)]; // makes a super usefull array, starting with "All" and then all unique cert names from the teachers list
+  });
+
+  availableCourses = computed(() => {
+    const allCourses = this.teachers().flatMap(t => t.courses?.map(c => c.name) || []);
+    return ['All', ...new Set(allCourses)];
+  });
 
   filteredTeachers = computed(() => {
+    let result = this.teachers();
     const query = this.searchQuery().toLowerCase().trim();
-    const allTeachers = this.teachers();
+    const cert = this.selectedCert();
+    const course = this.selectedCourse();
+    const maxDist = this.maxDistance();
+    const myLoc = this.myLocation();
 
-    if (!query) {
-      return allTeachers;
+    // Text Search
+    if (query) {
+      result = result.filter(t =>
+        t.first_name.toLowerCase().includes(query) ||
+        t.last_name.toLowerCase().includes(query)
+      );
     }
 
-    return allTeachers.filter(teacher =>
-      teacher.first_name.toLowerCase().includes(query) ||
-      teacher.last_name.toLowerCase().includes(query) ||
-      teacher.email.toLowerCase().includes(query)
-    );
+    // Certificate Filter
+    if (cert !== 'All') {
+      result = result.filter(t => t.certificates?.some(c => c.name === cert));
+    }
+
+    // Course Filter
+    if (course !== 'All') {
+      result = result.filter(t => t.courses?.some(c => c.name === course));
+    }
+
+    // Distance Filter (Haversine)
+    if (myLoc && maxDist < 250) { // If slider is at 250, we consider it "Any distance"
+      result = result.filter(t => {
+        if (!t.address?.location_data) return false; // Hide teachers with no location
+        const distance = this.calculateDistance(
+          myLoc.lat, myLoc.lng,
+          t.address.location_data.lat, t.address.location_data.lng
+        );
+        return distance <= maxDist;
+      });
+    }
+
+    return result;
   });
 
   async ngOnInit() {
@@ -58,8 +99,6 @@ private teacherService = inject(TeacherService);
       console.error('Failed to load teachers', error);
     } finally {
       this.isLoading.set(false);
-      console.log(this.teachers());
-
     }
   }
 
@@ -67,5 +106,20 @@ private teacherService = inject(TeacherService);
   onSearchInput(event: Event) {
     const inputElement = event.target as HTMLInputElement;
     this.searchQuery.set(inputElement.value);
+  }
+
+  private calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+    const R = 6371; // Earth's radius in km
+    const dLat = this.deg2rad(lat2 - lat1);
+    const dLon = this.deg2rad(lon2 - lon1);
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  private deg2rad(deg: number): number {
+    return deg * (Math.PI / 180);
   }
 }
