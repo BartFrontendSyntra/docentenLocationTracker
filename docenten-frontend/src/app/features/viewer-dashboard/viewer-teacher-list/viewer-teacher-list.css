@@ -1,0 +1,103 @@
+.list-container {
+  padding: 1rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.toolbar h2 {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.search-field {
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Make the form field look a bit tighter */
+::ng-deep .search-field .mdc-text-field--outlined {
+  background-color: white;
+}
+
+.teacher-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.teacher-card {
+  border-radius: 8px;
+}
+
+.card-content {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  gap: 1.5rem;
+}
+
+.avatar-placeholder {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #3f51b5;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+}
+
+.teacher-info {
+  flex: 1; /* Pushes the action button to the right */
+}
+
+.teacher-info h3 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.email-text {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.email-text mat-icon {
+  font-size: 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.empty-state, .loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: #888;
+  text-align: center;
+}
+
+.empty-state mat-icon {
+  font-size: 48px;
+  height: 48px;
+  width: 48px;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}

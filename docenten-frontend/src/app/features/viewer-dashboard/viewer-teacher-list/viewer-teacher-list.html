@@ -1,1 +1,58 @@
-<p>viewer-teacher-list works!</p>
+<div class="list-container">
+
+  <div class="toolbar">
+    <h2>Teacher Directory</h2>
+
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search teachers...</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput (input)="onSearchInput($event)" placeholder="Name or email">
+
+      @if (searchQuery()) {
+        <button mat-icon-button matSuffix (click)="searchQuery.set(''); searchInput.value = ''" aria-label="Clear">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+      <input type="hidden" #searchInput>
+    </mat-form-field>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <p>Loading teachers...</p>
+    </div>
+  }
+
+  <div class="teacher-list">
+    @for (teacher of filteredTeachers(); track teacher.id) {
+      <mat-card class="teacher-card" elevation="2">
+        <div class="card-content">
+
+          <div class="avatar-placeholder">
+            {{ teacher.first_name[0] }}{{ teacher.last_name[0] }}
+          </div>
+
+          <div class="teacher-info">
+            <h3>{{ teacher.first_name }} {{ teacher.last_name }}</h3>
+            <p class="email-text">
+              <mat-icon inline>email</mat-icon> {{ teacher.email }}
+            </p>
+          </div>
+
+          <div class="action-section">
+            <button mat-stroked-button color="primary">View Profile</button>
+          </div>
+
+        </div>
+      </mat-card>
+    } @empty {
+      @if (!isLoading()) {
+        <div class="empty-state">
+          <mat-icon>search_off</mat-icon>
+          <p>No teachers found matching "{{ searchQuery() }}"</p>
+        </div>
+      }
+    }
+  </div>
+
+</div>
