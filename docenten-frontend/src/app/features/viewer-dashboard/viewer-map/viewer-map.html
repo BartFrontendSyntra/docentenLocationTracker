@@ -1,1 +1,45 @@
-<p>viewer-map works!</p>
+<div class="map-page-container">
+
+  <div class="filter-bar">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search teachers...</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput (input)="onSearchInput($event)" [value]="searchQuery()" placeholder="Name or email">
+      @if (searchQuery()) {
+        <button mat-icon-button matSuffix (click)="searchQuery.set('')" aria-label="Clear">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Certification</mat-label>
+      <mat-select [value]="selectedCert()" (selectionChange)="selectedCert.set($event.value)">
+        @for (cert of availableCerts(); track cert) {
+          <mat-option [value]="cert">{{ cert }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Course</mat-label>
+      <mat-select [value]="selectedCourse()" (selectionChange)="selectedCourse.set($event.value)">
+        @for (course of availableCourses(); track course) {
+          <mat-option [value]="course">{{ course }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div class="distance-filter">
+      <label>Max Distance: <strong>{{ maxDistance() === 150 ? 'Any' : maxDistance() + ' km' }}</strong></label>
+      <mat-slider min="5" max="150" step="5" discrete>
+        <input matSliderThumb [value]="maxDistance()" (valueChange)="maxDistance.set($event)">
+      </mat-slider>
+    </div>
+  </div>
+
+  <div class="map-wrapper">
+    <div id="teacher-map"></div>
+  </div>
+
+</div>
