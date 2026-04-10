@@ -1,0 +1,48 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit User' : 'Create New User' }}</h2>
+
+<mat-dialog-content class="dialog-content">
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="user-form">
+
+    <mat-form-field appearance="outline">
+      <mat-label>Full Name</mat-label>
+      <input matInput formControlName="name" placeholder="e.g. Jane Doe">
+      @if (userForm.get('name')?.hasError('required')) {
+        <mat-error>Name is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email Address</mat-label>
+      <input matInput formControlName="email" type="email" placeholder="jane@example.com">
+      @if (userForm.get('email')?.hasError('email')) {
+        <mat-error>Please enter a valid email</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>System Role</mat-label>
+      <mat-select formControlName="role">
+        <mat-option value="viewer">Viewer (Read Only)</mat-option>
+        <mat-option value="admin">Administrator</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    @if (!isEditMode) {
+      <mat-form-field appearance="outline">
+        <mat-label>Initial Password</mat-label>
+        <input matInput formControlName="password" type="password">
+        @if (userForm.get('password')?.hasError('minlength')) {
+          <mat-error>Password must be at least 8 characters</mat-error>
+        }
+      </mat-form-field>
+    }
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-flat-button color="primary" [disabled]="userForm.invalid" (click)="onSubmit()">
+    {{ isEditMode ? 'Save Changes' : 'Create User' }}
+  </button>
+</mat-dialog-actions>
