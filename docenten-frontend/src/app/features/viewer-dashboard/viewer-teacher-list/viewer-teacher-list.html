@@ -1,1 +1,88 @@
-<p>viewer-teacher-list works!</p>
+<div class="list-container">
+
+  <div class="toolbar">
+    <h2>Teacher Directory</h2>
+
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search teachers...</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput (input)="onSearchInput($event)" placeholder="Name or email">
+
+      @if (searchQuery()) {
+        <button mat-icon-button matSuffix (click)="searchQuery.set(''); searchInput.value = ''" aria-label="Clear">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+      <input type="hidden" #searchInput>
+    </mat-form-field>
+  </div>
+<div class="filter-bar">
+
+    <mat-form-field appearance="outline">
+      <mat-label>Certification</mat-label>
+      <mat-select [value]="selectedCert()" (selectionChange)="selectedCert.set($event.value)">
+        @for (cert of availableCerts(); track cert) {
+          <mat-option [value]="cert">{{ cert }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Course</mat-label>
+      <mat-select [value]="selectedCourse()" (selectionChange)="selectedCourse.set($event.value)">
+        @for (course of availableCourses(); track course) {
+          <mat-option [value]="course">{{ course }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div class="distance-filter">
+      <label>
+        Max Distance:
+        <strong>{{ maxDistance() === 500 ? 'Any' : maxDistance() + ' km' }}</strong>
+      </label>
+      <mat-slider min="5" max="500" step="5" discrete>
+        <input matSliderThumb [value]="maxDistance()" (valueChange)="maxDistance.set($event)">
+      </mat-slider>
+    </div>
+
+  </div>
+  @if (isLoading()) {
+    <div class="loading-state">
+      <p>Loading teachers...</p>
+    </div>
+  }
+
+  <div class="teacher-list">
+    @for (teacher of filteredTeachers(); track teacher.id) {
+      <mat-card class="teacher-card" elevation="2">
+        <div class="card-content">
+
+          <div class="avatar-placeholder">
+            {{ teacher.first_name[0] }}{{ teacher.last_name[0] }}
+          </div>
+
+          <div class="teacher-info">
+            <h3>{{ teacher.first_name }} {{ teacher.last_name }}</h3>
+            <p class="email-text">
+              <mat-icon inline>email</mat-icon> {{ teacher.email }}
+            </p>
+          </div>
+
+          <div class="action-section">
+            <button mat-stroked-button color="primary">View Profile</button>
+          </div>
+
+        </div>
+      </mat-card>
+    } @empty {
+      @if (!isLoading()) {
+        <div class="empty-state">
+          <mat-icon>search_off</mat-icon>
+          <p>No teachers found matching "{{ searchQuery() }}"</p>
+        </div>
+      }
+    }
+  </div>
+
+</div>

@@ -1,0 +1,63 @@
+.map-page-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 100px); /* Adjust based on your dashboard header height */
+  padding: 1rem;
+  box-sizing: border-box;
+  gap: 1rem;
+}
+
+/* Same filter bar styling from the list component */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.filter-bar mat-form-field {
+  flex: 1;
+  min-width: 180px;
+}
+
+.search-field {
+  min-width: 250px !important;
+}
+
+::ng-deep .filter-bar .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+.distance-filter {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  padding-top: 8px;
+}
+
+.distance-filter label {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+/* Map specific styling */
+.map-wrapper {
+  flex-grow: 1; /* Makes the map fill the remaining vertical space */
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border: 1px solid #e0e0e0;
+}
+
+#teacher-map {
+  width: 100%;
+  height: 100%; /* Relies on .map-wrapper having a height via flex-grow */
+  z-index: 1; /* Prevents map controls from overlapping Material dropdowns */
+}
