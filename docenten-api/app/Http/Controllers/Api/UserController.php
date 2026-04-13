@@ -3,11 +3,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Role;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Gate;
+
 
 class UserController extends Controller
 {
@@ -27,12 +29,19 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255', Rule::unique('users', 'name')],
             'email'    => ['required', 'email', 'max:255', Rule::unique('users', 'email')],
             'password' => ['required', 'string', 'min:8'], // here we can enforce more rules on passwords if we want
-            'role_id'  => ['required', Rule::exists('roles', 'id')],
+            'role'  => ['required', Rule::exists('roles', 'name')],
         ]);
+
+        $role = Role::where('name', $validated['role'])->firstOrFail();
 
         $validated['password'] = Hash::make($validated['password']);
 
-        $user = User::create($validated);
+        $user = User::create([
+        'name'     => $validated['name'],
+        'email'    => $validated['email'],
+        'password' => Hash::make($validated['password']),
+        'role_id'  => $role->id,
+    ]);
 
         $user->load('role');
 
@@ -56,9 +65,17 @@ class UserController extends Controller
             'name' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('users', 'name')->ignore($user->id)],
             'email'    => ['sometimes', 'required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
             'password' => ['nullable', 'string', 'min:8'],
-            'role_id'  => ['sometimes', 'required', Rule::exists('roles', 'id')],
+            'role'  => ['sometimes', 'required', Rule::exists('roles', 'name')],
         ]);
 
+        // Check if the user wants to change role
+        if (isset($validated['role'])) {
+        $role = Role::where('name', $validated['role'])->firstOrFail();
+        $validated['role_id'] = $role->id;
+
+        // Remove the string 'role' from the array so it doesn't try to save it to the DB
+        unset($validated['role']);
+        }
         // Check if the user wants to change password
         if (!empty($validated['password'])) {
             $validated['password'] = Hash::make($validated['password']);
