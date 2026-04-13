@@ -1,0 +1,96 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit Instructor' : 'Register New Instructor' }}</h2>
+
+<mat-dialog-content class="dialog-content">
+  <form [formGroup]="teacherForm" class="teacher-form">
+
+    <mat-tab-group dynamicHeight>
+
+      <mat-tab label="Personal Info">
+        <div class="tab-body">
+          <div class="row">
+            <mat-form-field appearance="outline">
+              <mat-label>First Name</mat-label>
+              <input matInput formControlName="first_name">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Last Name</mat-label>
+              <input matInput formControlName="last_name">
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Email Address</mat-label>
+            <input matInput formControlName="email" type="email">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Company Number (KBO)</mat-label>
+            <input matInput formControlName="company_number">
+          </mat-form-field>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Contact Details">
+        <div class="tab-body">
+          <div class="row">
+            <mat-form-field appearance="outline">
+              <mat-label>Cellphone</mat-label>
+              <input matInput formControlName="cellphone">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Telephone (Landline)</mat-label>
+              <input matInput formControlName="telephone">
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field appearance="outline">
+              <mat-label>Street</mat-label>
+              <input matInput formControlName="street">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="small-input">
+              <mat-label>Nr</mat-label>
+              <input matInput formControlName="house_number">
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Qualifications">
+        <div class="tab-body">
+
+          <mat-form-field appearance="outline">
+            <mat-label>Assigned Courses</mat-label>
+            <mat-select formControlName="course_ids" multiple>
+              @for (course of availableCourses(); track course.id) {
+                <mat-option [value]="course.id">{{ course.name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Certifications</mat-label>
+            <mat-select formControlName="certificate_ids" multiple>
+              @for (cert of availableCertificates(); track cert.id) {
+                <mat-option [value]="cert.id">{{ cert.title }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+        </div>
+      </mat-tab>
+
+    </mat-tab-group>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-flat-button color="primary" [disabled]="teacherForm.invalid" (click)="onSubmit()">
+    {{ isEditMode ? 'Save Profile' : 'Register Instructor' }}
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,28 @@
+.dialog-content {
+  min-width: 500px;
+  overflow-x: hidden;
+}
+
+.tab-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem 0.5rem 0.5rem 0.5rem;
+}
+
+.row {
+  display: flex;
+  gap: 1rem;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.row mat-form-field {
+  flex: 1;
+}
+
+.small-input {
+  flex: 0 0 100px !important; 
+}

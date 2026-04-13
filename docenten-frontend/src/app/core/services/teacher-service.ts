@@ -14,7 +14,20 @@ export class TeacherService {
 
     const response: any = await firstValueFrom(this.http.get<Teacher[]>(this.apiUrl));
 
-    return response.data ? response.data : response; // adjust based on wrapped data message from api or not
+    return response.data ? response.data : response; 
+  }
+  async createTeacher(teacherData: Partial<Teacher>): Promise<Teacher> {
+    const response: any = await firstValueFrom(this.http.post(this.apiUrl, teacherData));
+    return response.data ? response.data : response;
+  }
+
+  async updateTeacher(id: number, teacherData: Partial<Teacher>): Promise<Teacher> {
+    const response: any = await firstValueFrom(this.http.put(`${this.apiUrl}/${id}`, teacherData));
+    return response.data ? response.data : response;
+  }
+
+  async deleteTeacher(id: number): Promise<void> {
+    await firstValueFrom(this.http.delete(`${this.apiUrl}/${id}`));
   }
 }
 
