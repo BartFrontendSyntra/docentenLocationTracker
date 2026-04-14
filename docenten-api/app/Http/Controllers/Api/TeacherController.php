@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Teacher;
+use App\Models\Address;
+use App\Models\Course;
+use App\Models\Certificate;
 use App\Http\Resources\TeacherResource;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -18,25 +21,6 @@ class TeacherController extends Controller
         Gate::authorize('viewAny', Teacher::class);
 
         $teachers = Teacher::with(['address.city', 'courses', 'certificates'])->paginate(25);
-
-        // debuggin
-    foreach ($teachers as $teacher) {
-        try {
-            // Force PHP to test encoding THIS specific teacher,
-            // and throw an error if it fails
-            json_encode($teacher->toArray(), JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
-            // Write the culprit directly to the Laravel log file!
-            logger()->error('🚨 BROKEN TEACHER FOUND 🚨', [
-                'ID' => $teacher->id,
-                'Error' => $e->getMessage(),
-                'Data' => $teacher->toArray() // Optional, but might be messy
-            ]);
-
-            // Gracefully fail the request with a readable message
-            abort(500, "Check your laravel.log file! Broken ID: " . $teacher->id);
-        }
-    }
 
 
         return TeacherResource::collection($teachers);
