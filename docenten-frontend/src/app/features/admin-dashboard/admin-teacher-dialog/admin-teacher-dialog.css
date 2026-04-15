@@ -24,5 +24,33 @@ mat-form-field {
 }
 
 .small-input {
-  flex: 0 0 100px !important; 
+  flex: 0 0 100px !important;
+}
+.map-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.map-hint {
+  font-size: 0.85rem;
+  color: #666;
+  font-style: italic;
+}
+
+.map-wrapper {
+  width: 100%;
+  height: 250px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  margin-bottom: 1rem;
+}
+
+#admin-location-map {
+  width: 100%;
+  height: 100%;
+  z-index: 1; /* Keeps it under Material dropdowns */
 }
