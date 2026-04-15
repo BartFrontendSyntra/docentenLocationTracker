@@ -1,0 +1,15 @@
+.dialog-content {
+  padding-top: 1rem !important;
+  min-width: 350px;
+}
+
+.user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Force the form fields to take up the full width of the dialog */
+mat-form-field {
+  width: 100%;
+}
