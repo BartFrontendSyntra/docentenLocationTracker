@@ -4,14 +4,14 @@
   <form [formGroup]="teacherForm" class="teacher-form">
 
     <mat-tab-group dynamicHeight (selectedTabChange)="onTabChange()">
-      <mat-tab label="Contact & Location">
+      <mat-tab label="Contact & Locatie">
         <div class="tab-body">
           <div class="map-controls">
             <button mat-stroked-button color="primary" type="button" (click)="geocodeAddress()">
               <mat-icon>location_searching</mat-icon>
-              Vind locatie op de map
+              Vind locatie op de map op basis van adresgegevens
             </button>
-            <span class="map-hint">Drag the pin if the location is slightly off.</span>
+            <span class="map-hint">sleep de pin naar gedetaileerde locatie.</span>
           </div>
 
           <div class="map-wrapper">
@@ -20,16 +20,16 @@
 
         </div>
       </mat-tab>
-      <mat-tab label="Personal Info">
+      <mat-tab label="Persoonlijke Info">
         <div class="tab-body">
           <div class="row">
             <mat-form-field appearance="outline">
-              <mat-label>First Name</mat-label>
+              <mat-label>Voornaam</mat-label>
               <input matInput formControlName="first_name">
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Last Name</mat-label>
+              <mat-label>Achternaam</mat-label>
               <input matInput formControlName="last_name">
             </mat-form-field>
           </div>
@@ -40,29 +40,29 @@
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Company Number (KBO)</mat-label>
+            <mat-label>Bedrijfsregisternummer (KBO)</mat-label>
             <input matInput formControlName="company_number">
           </mat-form-field>
         </div>
       </mat-tab>
 
-      <mat-tab label="Contact Details">
+      <mat-tab label="Contactdetails">
         <div class="tab-body">
           <div class="row">
             <mat-form-field appearance="outline">
-              <mat-label>Cellphone</mat-label>
+              <mat-label>gsm nummer</mat-label>
               <input matInput formControlName="cellphone">
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Telephone (Landline)</mat-label>
+              <mat-label>Vast telefoonnummer</mat-label>
               <input matInput formControlName="telephone">
             </mat-form-field>
           </div>
 
           <div class="row">
             <mat-form-field appearance="outline">
-              <mat-label>Street</mat-label>
+              <mat-label>Straat</mat-label>
               <input matInput formControlName="street">
             </mat-form-field>
 
@@ -73,12 +73,12 @@
           </div>
           <div class="row">
             <mat-form-field appearance="outline" class="small-input">
-              <mat-label>Postal Code</mat-label>
+              <mat-label>Postcode</mat-label>
               <input matInput formControlName="postal_code" placeholder="3670">
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>City</mat-label>
+              <mat-label>Stad</mat-label>
               <input matInput formControlName="city" placeholder="Oudsbergen">
             </mat-form-field>
           </div>
@@ -89,7 +89,7 @@
         <div class="tab-body">
 
           <mat-form-field appearance="outline">
-            <mat-label>Assigned Courses</mat-label>
+            <mat-label>Toegewezen Cursussen</mat-label>
             <mat-select formControlName="course_ids" multiple>
               @for (course of availableCourses(); track course.id) {
                 <mat-option [value]="course.id">{{ course.name }}</mat-option>
@@ -98,7 +98,7 @@
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Certifications</mat-label>
+            <mat-label>Certificeringen</mat-label>
             <mat-select formControlName="certificate_ids" multiple>
               @for (cert of availableCertificates(); track cert.id) {
                 <mat-option [value]="cert.id">{{ cert.title }}</mat-option>
