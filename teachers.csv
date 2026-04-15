@@ -1,0 +1,5 @@
+first_name,last_name,email,company_number,telephone,cellphone,street,house_number,postal_code,city,courses,certificates,lat,lng
+Jan,Peeters,jan.peeters@test.be,BE0123456789,011223344,0499112233,Kerkstraat,15,3660,Oudsbergen,"Scrum Master, First Aid","VCA, Safety Pro",51.0436,5.5925
+Marie,Claes,marie.claes@test.be,,024455667,,Wetstraat,1,1000,Brussels,Advanced Laravel,,,
+Tom,Willems,tom.willems@test.be,BE0987654321,,,,,,,,,First Aid,50.8503,
+Sarah,Desmedt,sarah.d@test.be,BE0112233445,032221133,0477889900,Stationstraat,42B,2000,Antwerp,"React for Beginners, Angular Mastery","Web Security, VCA",51.2194,4.4025
