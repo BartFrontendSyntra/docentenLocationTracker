@@ -218,4 +218,43 @@ class TeacherController extends Controller
 
         return response()->noContent();
     }
+
+    public function import(Request $request)
+    {
+     Gate::authorize('create', Teacher::class);
+
+    $request->validate([
+        'file' => ['required', 'file', 'mimes:csv,txt', 'max:5120'],
+    ]);
+
+    $file = $request->file('file');
+
+    $csvData = array_map('str_getcsv', file($file->getRealPath()));
+
+    $headers = array_shift($csvData);
+
+    $importedTeachers = [];
+
+    foreach ($csvData as $row) {
+        $rowData = array_combine($headers, $row);
+
+        $teacher = Teacher::updateOrCreate(
+            ['email' => $rowData['email']],
+            [
+                'first_name'     => $rowData['first_name'] ?? 'Unknown',
+                'last_name'      => $rowData['last_name'] ?? 'Unknown',
+                'company_number' => $rowData['company_number'] ?? null,
+                'telephone'      => $rowData['telephone'] ?? null,
+                'cellphone'      => $rowData['cellphone'] ?? null,
+            ]
+        );
+
+        $importedTeachers[] = $teacher;
+    }
+
+    return response()->json([
+        'message' => count($importedTeachers) . ' teachers imported successfully.',
+        'data' => TeacherResource::collection($importedTeachers)
+    ], 200);
+    }
 }

@@ -6,6 +6,17 @@
       <p>Manage instructeurprofielen, contactgegevens en certificeringen.</p>
     </div>
 
+    <input
+        type="file"
+        #csvInput
+        accept=".csv"
+        style="display: none"
+        (change)="onFileSelected($event)"
+      >
+    <button mat-stroked-button color="primary" (click)="csvInput.click()">
+        <mat-icon>upload_file</mat-icon>
+        Import CSV
+      </button>
     <button mat-flat-button color="primary" (click)="openTeacherForm()">
       <mat-icon>person_add</mat-icon>
       Nieuwe instructeur
