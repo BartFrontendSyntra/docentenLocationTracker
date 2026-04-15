@@ -10,6 +10,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Teacher, TeacherService } from '@app/core/services/teacher-service';
+import { MatDialog } from '@angular/material/dialog';
+import { ViewerTeacherDetails } from '../viewer-teacher-details/viewer-teacher-details';
 
 @Component({
   selector: 'app-viewer-teacher-list',
@@ -36,9 +38,17 @@ private teacherService = inject(TeacherService);
   selectedCert = signal<string>('All');
   selectedCourse = signal<string>('All');
   maxDistance = signal<number>(25);
+  private dialog = inject(MatDialog);
 
   // default location, needs to be changed to users preferred location or current location
   myLocation = signal<{lat: number, lng: number} | null>({ lat: 50.9383, lng: 5.3486 });
+
+  openTeacherDetails(teacher: Teacher) {
+    this.dialog.open(ViewerTeacherDetails, {
+      width: '500px',
+      data: teacher
+    });
+  }
 
   availableCerts = computed(() => {
     const allCerts = this.teachers().flatMap(t => t.certificates?.map(c => c.name) || []);

@@ -1,1 +1,70 @@
-<p>viewer-teacher-details works!</p>
+<div class="dialog-header">
+  <h2 mat-dialog-title>{{ teacher.first_name }} {{ teacher.last_name }}</h2>
+  <button mat-icon-button mat-dialog-close aria-label="Close dialog">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content class="profile-content">
+
+  <div class="info-section">
+    <h3><mat-icon>contact_mail</mat-icon> Contact</h3>
+    <p><strong>Email:</strong> <a [href]="'mailto:' + teacher.email">{{ teacher.email }}</a></p>
+    @if (teacher.contact.cellphone) {
+      <p><strong>Mobile:</strong> {{ teacher.contact.cellphone }}</p>
+    }
+    @if (teacher.contact.telephone) {
+      <p><strong>Phone:</strong> {{ teacher.contact.telephone }}</p>
+    }
+    @if (teacher.company_number) {
+      <p><strong>KBO:</strong> {{ teacher.company_number }}</p>
+    }
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="info-section">
+    <h3><mat-icon>location_on</mat-icon> Location</h3>
+    @if (teacher.address) {
+      <p>
+        {{ teacher.address.street }} {{ teacher.address.house_number }}<br>
+        {{ teacher.address.city.postal_code }} {{ teacher.address.city.name }}
+      </p>
+    } @else {
+      <p class="text-muted">No location data available.</p>
+    }
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="info-section">
+    <h3><mat-icon>school</mat-icon> Assigned Courses</h3>
+    @if (teacher.courses && teacher.courses.length > 0) {
+      <mat-chip-set>
+        @for (course of teacher.courses; track course.id) {
+          <mat-chip>{{ course.name }}</mat-chip>
+        }
+      </mat-chip-set>
+    } @else {
+      <p class="text-muted">No courses assigned.</p>
+    }
+  </div>
+
+  <div class="info-section">
+    <h3><mat-icon>verified</mat-icon> Certifications</h3>
+    @if (teacher.certificates && teacher.certificates.length > 0) {
+      <mat-chip-set>
+        @for (cert of teacher.certificates; track cert.id) {
+          <mat-chip color="accent" highlighted>{{ cert.name }}</mat-chip>
+        }
+      </mat-chip-set>
+    } @else {
+      <p class="text-muted">No certifications on file.</p>
+    }
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-flat-button color="primary" mat-dialog-close>Close</button>
+</mat-dialog-actions>

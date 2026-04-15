@@ -55,7 +55,7 @@
 
   <div class="teacher-list">
     @for (teacher of filteredTeachers(); track teacher.id) {
-      <mat-card class="teacher-card" elevation="2">
+      <mat-card class="teacher-card" (click)="openTeacherDetails(teacher)" elevation="2">
         <div class="card-content">
 
           <div class="avatar-placeholder">
