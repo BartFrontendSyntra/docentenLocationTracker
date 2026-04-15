@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('company_number')->nullable();
             $table->string('telephone')->nullable();
             $table->string('cellphone')->nullable();
-            $table->foreignId('address_id')->constrained()->onDelete('cascade');
+            $table->foreignId('address_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

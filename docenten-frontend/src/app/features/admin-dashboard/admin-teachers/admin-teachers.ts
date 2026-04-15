@@ -97,4 +97,32 @@ export class AdminTeachers implements OnInit {
       }
     });
   }
+  async onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+
+      if (!file.name.endsWith('.csv')) {
+        alert('Please upload a valid CSV file.');
+        return;
+      }
+
+      this.isLoading.set(true);
+
+      try {
+        const importedData = await this.teacherService.importTeachersFromCsv(file);
+
+        await this.loadTeachers();
+
+        alert(`Successfully imported ${importedData.length} teachers!`);
+      } catch (error) {
+        console.error('Import failed:', error);
+        alert('Failed to import teachers. Please check your CSV format and try again.');
+      } finally {
+        this.isLoading.set(false);
+        input.value = '';
+      }
+    }
+  }
 }

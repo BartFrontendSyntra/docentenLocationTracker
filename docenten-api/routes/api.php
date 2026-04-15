@@ -20,6 +20,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
 
+    Route::post('/teachers/import', [TeacherController::class, 'import']); // cvs import route
+
     Route::get('/user', function (Request $request) {
         $user = $request->user()->load('role');
 
