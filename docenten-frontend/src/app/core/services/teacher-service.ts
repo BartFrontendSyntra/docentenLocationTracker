@@ -14,7 +14,7 @@ export class TeacherService {
 
     const response: any = await firstValueFrom(this.http.get<Teacher[]>(this.apiUrl));
 
-    return response.data ? response.data : response; 
+    return response.data ? response.data : response;
   }
   async createTeacher(teacherData: Partial<Teacher>): Promise<Teacher> {
     const response: any = await firstValueFrom(this.http.post(this.apiUrl, teacherData));
@@ -28,6 +28,16 @@ export class TeacherService {
 
   async deleteTeacher(id: number): Promise<void> {
     await firstValueFrom(this.http.delete(`${this.apiUrl}/${id}`));
+  }
+  async importTeachersFromCsv(file: File): Promise<Teacher[]> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response: any = await firstValueFrom(
+      this.http.post(`${this.apiUrl}/import`, formData)
+    );
+
+    return response.data ? response.data : response;
   }
 }
 
