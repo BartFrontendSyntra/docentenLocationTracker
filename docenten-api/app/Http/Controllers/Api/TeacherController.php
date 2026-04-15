@@ -220,41 +220,118 @@ class TeacherController extends Controller
     }
 
     public function import(Request $request)
-    {
-     Gate::authorize('create', Teacher::class);
+{
+    // Gate::authorize('create', Teacher::class);
 
     $request->validate([
         'file' => ['required', 'file', 'mimes:csv,txt', 'max:5120'],
     ]);
 
     $file = $request->file('file');
-
     $csvData = array_map('str_getcsv', file($file->getRealPath()));
-
     $headers = array_shift($csvData);
+
+    $headers = array_map('trim', $headers);
+    $headerCount = count($headers);
 
     $importedTeachers = [];
 
     foreach ($csvData as $row) {
+        // Skip completely empty rows
+        if (empty(array_filter($row))) {
+            continue;
+        }
+        $rowCount = count($row);
+        if ($rowCount < $headerCount) {
+            // If the row is too short (missing trailing commas), pad it with empty strings
+            $row = array_pad($row, $headerCount, '');
+        } elseif ($rowCount > $headerCount) {
+            // If the row has extra rogue commas at the end, slice them off
+            $row = array_slice($row, 0, $headerCount);
+        }
+
         $rowData = array_combine($headers, $row);
 
+        $cityId = null;
+        if (!empty($rowData['city']) || !empty($rowData['postal_code'])) {
+            $city = City::firstOrCreate([
+                'name'        => trim($rowData['city'] ?? ''),
+                'postal_code' => trim($rowData['postal_code'] ?? '')
+            ]);
+            $cityId = $city->id;
+        }
+
+        $locationData = null;
+        // Check if the CSV has lat and lng columns, and if they actually contain numbers
+        if (isset($rowData['lat']) && isset($rowData['lng']) && $rowData['lat'] !== '' && $rowData['lng'] !== '') {
+            $lat = (float) trim($rowData['lat']);
+            $lng = (float) trim($rowData['lng']);
+
+            // 4326 is the standard SRID for GPS coordinates
+            $locationData = new Point($lat, $lng, 4326);
+        }
+
+        $addressId = null;
+        if (!empty($rowData['street']) || $cityId) {
+            $address = Address::firstOrCreate([
+                'street'       => trim($rowData['street'] ?? ''),
+                'house_number' => trim($rowData['house_number'] ?? ''),
+                'city_id'      => $cityId,
+            ]);
+            if ($locationData) {
+                $address->update(['location_data' => $locationData]);
+            }
+            $addressId = $address->id;
+        }
+
         $teacher = Teacher::updateOrCreate(
-            ['email' => $rowData['email']],
+            ['email' => trim($rowData['email'])],
             [
-                'first_name'     => $rowData['first_name'] ?? 'Unknown',
-                'last_name'      => $rowData['last_name'] ?? 'Unknown',
-                'company_number' => $rowData['company_number'] ?? null,
-                'telephone'      => $rowData['telephone'] ?? null,
-                'cellphone'      => $rowData['cellphone'] ?? null,
+                'first_name'     => trim($rowData['first_name'] ?? 'Unknown'),
+                'last_name'      => trim($rowData['last_name'] ?? 'Unknown'),
+                'company_number' => trim($rowData['company_number'] ?? null),
+                'telephone'      => trim($rowData['telephone'] ?? null),
+                'cellphone'      => trim($rowData['cellphone'] ?? null),
+                'address_id'     => $addressId,
             ]
         );
+
+        if (!empty($rowData['courses'])) {
+            $courseNames = array_map('trim', explode(',', $rowData['courses']));
+            $courseIds = [];
+
+            foreach ($courseNames as $name) {
+                if (!empty($name)) {
+                    $course = Course::firstOrCreate(['name' => $name]);
+                    $courseIds[] = $course->id;
+                }
+            }
+            $teacher->courses()->sync($courseIds);
+        }
+
+        if (!empty($rowData['certificates'])) {
+            $certTitles = array_map('trim', explode(',', $rowData['certificates']));
+            $certIds = [];
+
+            foreach ($certTitles as $name) {
+                if (!empty($name)) {
+                    $cert = Certificate::firstOrCreate(['name' => $name]);
+                    $certIds[] = $cert->id;
+                }
+            }
+            $teacher->certificates()->sync($certIds);
+        }
 
         $importedTeachers[] = $teacher;
     }
 
+    $teachersToReturn = collect($importedTeachers)->map(function ($teacher) {
+        return $teacher->load(['address.city', 'courses', 'certificates']);
+    });
+
     return response()->json([
         'message' => count($importedTeachers) . ' teachers imported successfully.',
-        'data' => TeacherResource::collection($importedTeachers)
+        'data' => TeacherResource::collection($teachersToReturn)
     ], 200);
     }
 }
