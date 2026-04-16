@@ -1,0 +1,11 @@
+<mat-card class="stat-card">
+  <mat-card-content class="card-content">
+    <div class="text-section">
+      <p class="stat-title">{{ title }}</p>
+      <h2 class="stat-value">{{ value }}</h2>
+    </div>
+    <div class="icon-section" [ngStyle]="{'background-color': color + '20', 'color': color}">
+      <mat-icon>{{ icon }}</mat-icon>
+    </div>
+  </mat-card-content>
+</mat-card>

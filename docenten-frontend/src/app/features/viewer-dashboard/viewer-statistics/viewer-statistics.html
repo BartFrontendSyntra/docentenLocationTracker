@@ -1,1 +1,25 @@
-<p>viewer-statistics works!</p>
+<div class="dashboard-container">
+  <h2>Platform Overview</h2>
+
+  <div class="cards-grid">
+    <app-stat-card title="Total Teachers" [value]="totalTeachers()" icon="school" color="#3f51b5"></app-stat-card>
+    <app-stat-card title="Active Courses" [value]="totalCourses()" icon="menu_book" color="#e91e63"></app-stat-card>
+    <app-stat-card title="Certifications" [value]="totalCerts()" icon="verified" color="#4caf50"></app-stat-card>
+  </div>
+
+  <div class="charts-grid">
+    <app-stat-chart
+      title="Teachers per Course"
+      [labels]="courseChartLabels()"
+      [data]="courseChartData()"
+      color="#e91e63">
+    </app-stat-chart>
+
+    <app-stat-chart
+      title="Teachers per Certification"
+      [labels]="certChartLabels()"
+      [data]="certChartData()"
+      color="#4caf50">
+    </app-stat-chart>
+  </div>
+</div>
