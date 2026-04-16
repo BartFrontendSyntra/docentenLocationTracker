@@ -1,1 +1,32 @@
-<p>admin-statistics works!</p>
+<div class="dashboard-container">
+  <h2>System Overview (Admin)</h2>
+
+  <div class="cards-grid">
+    <app-stat-card
+      title="Aantal gebruikers"
+      [value]="totalUsers()"
+      icon="admin_panel_settings"
+      color="#f44336">
+    </app-stat-card>
+
+    <app-stat-card title="Aantal docenten" [value]="totalTeachers()" icon="school" color="#3f51b5"></app-stat-card>
+    <app-stat-card title="Aantal cursussen" [value]="totalCourses()" icon="menu_book" color="#e91e63"></app-stat-card>
+    <app-stat-card title="Aantal certificaten" [value]="totalCerts()" icon="verified" color="#4caf50"></app-stat-card>
+  </div>
+
+  <div class="charts-grid">
+    <app-stat-chart
+      title="Docenten per cursus"
+      [labels]="courseChartLabels()"
+      [data]="courseChartData()"
+      color="#e91e63">
+    </app-stat-chart>
+
+    <app-stat-chart
+      title="Docenten met certificaat"
+      [labels]="certChartLabels()"
+      [data]="certChartData()"
+      color="#4caf50">
+    </app-stat-chart>
+  </div>
+</div>
