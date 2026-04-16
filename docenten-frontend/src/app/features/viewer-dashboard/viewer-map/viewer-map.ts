@@ -2,6 +2,9 @@ import { Component, OnInit, AfterViewInit, inject, signal, computed, effect } fr
 import { CommonModule } from '@angular/common';
 import { TeacherService, Teacher } from '@core/services/teacher-service';
 import * as L from 'leaflet';
+import { NgZone } from '@angular/core';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ViewerTeacherDetails } from '../viewer-teacher-details/viewer-teacher-details';
 
 // Material Imports
 import { MatSelectModule } from '@angular/material/select';
@@ -33,6 +36,9 @@ export class ViewerMap implements OnInit, AfterViewInit {
   private teacherService = inject(TeacherService);
   private map!: L.Map;
   private markerGroup = L.layerGroup(); // Holds all our pins so we can clear them easily
+
+  private dialog = inject(MatDialog);
+  private zone = inject(NgZone);
 
   teachers = signal<Teacher[]>([]);
   searchQuery = signal<string>('');
@@ -146,26 +152,36 @@ export class ViewerMap implements OnInit, AfterViewInit {
       // Add them to the group so they get cleared on the next update
       this.markerGroup.addLayer(searchRadius);
       this.markerGroup.addLayer(centerPin);
+
     }
 
 
-    teachers.forEach(teacher => {
+          // teacher details
+      teachers.forEach(teacher => {
       if (teacher.address?.location_data) {
         const marker = L.marker([
           teacher.address.location_data.lat,
           teacher.address.location_data.lng
         ]);
 
-        const popupContent = `
-          <strong>${teacher.first_name} ${teacher.last_name}</strong><br>
-          ${teacher.email}<br>
-          <em>${teacher.address.city?.name || 'Unknown City'}</em>
-        `;
 
-        marker.bindPopup(popupContent);
+        // We must wrap this in NgZone, otherwise Angular won't realize the dialog needs to render
+
+        marker.on('click', () => {
+          this.zone.run(() => {
+            this.dialog.open(ViewerTeacherDetails, {
+              width: '500px',
+              data: teacher
+            });
+          });
+        });
+
+        marker.bindTooltip(`<strong>${teacher.first_name} ${teacher.last_name}</strong>`);
+
         this.markerGroup.addLayer(marker);
       }
     });
+
   }
 
   // put search input value into our signal
