@@ -1,24 +1,42 @@
 <mat-sidenav-container class="dashboard-wrapper">
   <mat-sidenav mode="side" opened class="sidebar">
     <div class="sidebar-header">
-      <div class="logo-circle">
-        <mat-icon color="primary">school</mat-icon>
+      <div class="title-section">
+        <img src="SyntraPxlLogo.jpg" alt="syntra Logo" class="app-logo" />
       </div>
       <h2>Docentenradar</h2>
     </div>
 
     <mat-nav-list class="nav-links">
-      <a mat-list-item routerLink="./statistics" routerLinkActive #rla1="routerLinkActive" [activated]="rla1.isActive">
+      <a
+        mat-list-item
+        routerLink="./statistics"
+        routerLinkActive
+        #rla1="routerLinkActive"
+        [activated]="rla1.isActive"
+      >
         <mat-icon matListItemIcon>dashboard</mat-icon>
         <div matListItemTitle>overzicht</div>
       </a>
 
-      <a mat-list-item routerLink="./map" routerLinkActive #rla2="routerLinkActive" [activated]="rla2.isActive">
+      <a
+        mat-list-item
+        routerLink="./map"
+        routerLinkActive
+        #rla2="routerLinkActive"
+        [activated]="rla2.isActive"
+      >
         <mat-icon matListItemIcon>map</mat-icon>
         <div matListItemTitle>Map</div>
       </a>
 
-      <a mat-list-item routerLink="./teachers" routerLinkActive #rla3="routerLinkActive" [activated]="rla3.isActive">
+      <a
+        mat-list-item
+        routerLink="./teachers"
+        routerLinkActive
+        #rla3="routerLinkActive"
+        [activated]="rla3.isActive"
+      >
         <mat-icon matListItemIcon>list</mat-icon>
         <div matListItemTitle>alle docenten</div>
       </a>
