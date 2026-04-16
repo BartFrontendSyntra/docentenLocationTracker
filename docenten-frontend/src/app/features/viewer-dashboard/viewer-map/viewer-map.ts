@@ -46,7 +46,7 @@ export class ViewerMap implements OnInit, AfterViewInit {
   selectedCourse = signal<string>('All');
   maxDistance = signal<number>(150);
   myLocation = signal<{lat: number, lng: number} | null>({ lat: 50.99727256605152, lng: 5.535658697630291 }); // Hasselt default
-
+  locationSearchQuery = signal<string>('Hasselt');
 
   availableCerts = computed(() => {
     const allCerts = this.teachers().flatMap(t => t.certificates?.map(c => c.name) || []);
@@ -121,6 +121,37 @@ export class ViewerMap implements OnInit, AfterViewInit {
     this.markerGroup.addTo(this.map);
 
     this.updateMapMarkers(this.filteredTeachers(), this.maxDistance(), this.myLocation());
+    this.map.on('click', (e: any) => {
+      this.myLocation.set({ lat: e.latlng.lat, lng: e.latlng.lng });
+      this.locationSearchQuery.set('Custom Map Location');
+    });
+
+    setTimeout(() => {
+      this.map.invalidateSize();
+    }, 100);
+  }
+
+  async searchLocation() {
+    const query = this.locationSearchQuery();
+    if (!query) return;
+
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
+      const data = await response.json();
+
+      if (data && data.length > 0) {
+        const lat = parseFloat(data[0].lat);
+        const lng = parseFloat(data[0].lon);
+
+        this.myLocation.set({ lat, lng });
+
+        this.map.flyTo([lat, lng], 11);
+      } else {
+        alert('Could not find that location. Try adding a postal code or country.');
+      }
+    } catch (error) {
+      console.error('Geocoding failed:', error);
+    }
   }
 
   // Marker Logic

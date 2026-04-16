@@ -2,7 +2,7 @@
 
   <div class="filter-bar">
     <mat-form-field appearance="outline" class="search-field">
-      <mat-label>Search teachers...</mat-label>
+      <mat-label>docent naam</mat-label>
       <mat-icon matPrefix>search</mat-icon>
       <input matInput (input)="onSearchInput($event)" [value]="searchQuery()" placeholder="Name or email">
       @if (searchQuery()) {
@@ -28,6 +28,21 @@
           <mat-option [value]="course">{{ course }}</mat-option>
         }
       </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Locatie</mat-label>
+      <mat-icon matPrefix>place</mat-icon>
+
+      <input
+        matInput
+        [value]="locationSearchQuery()"
+        (input)="locationSearchQuery.set($any($event.target).value)"
+        (keyup.enter)="searchLocation()"
+        placeholder="e.g. Genk">
+
+      <button mat-icon-button matSuffix color="primary" (click)="searchLocation()" matTooltip="Search Map">
+        <mat-icon>search</mat-icon>
+      </button>
     </mat-form-field>
 
     <div class="distance-filter">
