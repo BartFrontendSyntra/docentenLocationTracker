@@ -1,10 +1,13 @@
 <div class="list-container">
 
   <div class="toolbar">
-    <h2>Teacher Directory</h2>
+    <h2>Docentenlijst</h2>
 
+
+  </div>
+  <div class="filter-bar">
     <mat-form-field appearance="outline" class="search-field">
-      <mat-label>Search teachers...</mat-label>
+      <mat-label>Naam docent</mat-label>
       <mat-icon matPrefix>search</mat-icon>
       <input matInput (input)="onSearchInput($event)" placeholder="Name or email">
 
@@ -15,9 +18,6 @@
       }
       <input type="hidden" #searchInput>
     </mat-form-field>
-  </div>
-<div class="filter-bar">
-
     <mat-form-field appearance="outline">
       <mat-label>Certification</mat-label>
       <mat-select [value]="selectedCert()" (selectionChange)="selectedCert.set($event.value)">
@@ -35,13 +35,27 @@
         }
       </mat-select>
     </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Locatie</mat-label>
+      <mat-icon matPrefix>place</mat-icon>
 
+      <input
+        matInput
+        [value]="locationSearchQuery()"
+        (input)="locationSearchQuery.set($any($event.target).value)"
+        (keyup.enter)="searchLocation()"
+        placeholder="e.g. Genk">
+
+      <button mat-icon-button matSuffix color="primary" (click)="searchLocation()" matTooltip="Search Map">
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
     <div class="distance-filter">
       <label>
-        Max Distance:
-        <strong>{{ maxDistance() === 500 ? 'Any' : maxDistance() + ' km' }}</strong>
+        Max afstand:
+        <strong>{{ maxDistance() === 150 ? 'Any' : maxDistance() + ' km' }}</strong>
       </label>
-      <mat-slider min="5" max="500" step="5" discrete>
+      <mat-slider min="5" max="150" step="5" discrete>
         <input matSliderThumb [value]="maxDistance()" (valueChange)="maxDistance.set($event)">
       </mat-slider>
     </div>
@@ -49,7 +63,7 @@
   </div>
   @if (isLoading()) {
     <div class="loading-state">
-      <p>Loading teachers...</p>
+      <p>Laden...</p>
     </div>
   }
 
@@ -70,7 +84,7 @@
           </div>
 
           <div class="action-section">
-            <button mat-stroked-button color="primary">View Profile</button>
+            <button mat-stroked-button color="primary">Bekijk profiel</button>
           </div>
 
         </div>
@@ -79,7 +93,7 @@
       @if (!isLoading()) {
         <div class="empty-state">
           <mat-icon>search_off</mat-icon>
-          <p>No teachers found matching "{{ searchQuery() }}"</p>
+          <p>Geen docenten gevonden die overeenkomen met "{{ searchQuery() }}"</p>
         </div>
       }
     }

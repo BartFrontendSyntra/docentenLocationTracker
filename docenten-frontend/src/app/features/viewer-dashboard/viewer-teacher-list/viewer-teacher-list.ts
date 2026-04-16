@@ -38,6 +38,7 @@ private teacherService = inject(TeacherService);
   selectedCert = signal<string>('All');
   selectedCourse = signal<string>('All');
   maxDistance = signal<number>(25);
+  locationSearchQuery = signal<string>('Hasselt');
   private dialog = inject(MatDialog);
 
   // default location, needs to be changed to users preferred location or current location
@@ -48,6 +49,28 @@ private teacherService = inject(TeacherService);
       width: '500px',
       data: teacher
     });
+  }
+
+  async searchLocation() {
+    const query = this.locationSearchQuery();
+    if (!query) return;
+
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
+      const data = await response.json();
+
+      if (data && data.length > 0) {
+        const lat = parseFloat(data[0].lat);
+        const lng = parseFloat(data[0].lon);
+
+        this.myLocation.set({ lat, lng });
+
+      } else {
+        alert('Locatie niet gevonden. Probeer een andere zoekopdracht.');
+      }
+    } catch (error) {
+      console.error('Geocoding failed:', error);
+    }
   }
 
   availableCerts = computed(() => {
